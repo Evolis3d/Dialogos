@@ -6,14 +6,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+using Gamascorpio.Dialogos;
+
 public class GAME : MonoBehaviour
 {
     public TMP_Text capto;
     public Canvas cv;
+    [Space(20), SerializeField] public List<SO_Dialogos> Dialogos;
 
     private void Start()
     {
         cv.enabled = false;
+
+        if (Dialogos == null) throw new Exception("Capullo! Falta un asset de tipo Dialogo!");
+        if (Dialogos.Count < 1) throw new Exception("La lista de Dialogos esta vacia!");
     }
 
     // Update is called once per frame
@@ -21,27 +27,41 @@ public class GAME : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            capto.text = dialogo();
-            StartCoroutine(showDialog());
+            var rd = Random.Range(0, Dialogos.Count);
+            ShowDialogo(Dialogos[rd]);
         }
     }
 
-    private string dialogo()
+    private void ShowDialogo(SO_Dialogos item)
     {
-        List<string> textos = new List<string>();
-        textos.Add("Hola guapo!");
-        textos.Add("Ostras! Creo que me he equivocado de juego...");
-        textos.Add("Pulsa cualquier tecla para empezar.");
-        textos.Add("En ocasiones, veo pixels...");
+        if (item == null || item.Dialogo.Count < 1) return;
 
-        var po = Random.Range(0, 4);
-        return textos[po];
+        IEnumerator[] routines = new IEnumerator[item.Dialogo.Count];
+        for (int i = 0; i < routines.Length; i++)
+        {
+            routines[i] = ShowFrase(item.Dialogo[i]);
+        }
+
+        StartCoroutine(OneAfterTheOther(routines));
     }
-
-    private IEnumerator showDialog()
+    
+    private IEnumerator OneAfterTheOther( params IEnumerator[] routines ) 
     {
+        foreach ( var item in routines ) 
+        {
+            while ( item.MoveNext() ) yield return item.Current;
+        }
+
+        yield break;
+    }
+    
+
+    private IEnumerator ShowFrase(Frase myFrase)
+    {
+        capto.text = myFrase.characterId + " : " + myFrase.texto;
         cv.enabled = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(myFrase.duration);
         cv.enabled = false;
     }
+
 }

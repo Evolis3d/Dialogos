@@ -489,6 +489,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capto: {fileID: 1491801638}
   cv: {fileID: 817036220}
+  Dialogos:
+  - {fileID: 11400000, guid: d5be4cf2f0d97d844a1fb4aa372a11e1, type: 2}
+  - {fileID: 11400000, guid: 1876311bfd7076c4e915878861b48f38, type: 2}
 --- !u!4 &498914912
 Transform:
   m_ObjectHideFlags: 0
