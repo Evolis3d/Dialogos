@@ -2,7 +2,8 @@
 
 ### Sistema de diálogos entre personajes
 
-by **Carlos Lecina** 2021
+### Author
+[☕ Carlos Lecina](https://ko-fi.com/carloslecina)
 
 ------
 
